@@ -1,11 +1,20 @@
 let gravity = 0.1;
-let ball = {
-	x: 300,
-	y: 100,
-	xSpeed: 1,
-	ySpeed: 0,
-	size: 50,
-};
+let enemies = [
+	{
+		x: 300,
+		y: 100,
+		xSpeed: 1,
+		ySpeed: 0,
+		size: 50,
+	},
+	{
+		x: 500,
+		y: 100,
+		xSpeed: 1,
+		ySpeed: 0,
+		size: 50,
+	},
+];
 let player = {
 	x: 300,
 	y: 350,
@@ -22,11 +31,12 @@ function draw() {
 	updatePlayer();
 	drawPlayer();
 	//update enemies
-	updateEnemy(ball);
-	drawEnemy(ball);
-
-	if (isColliding(player, ball)) {
-		console.log("colliding");
+	for (let i = 0; i < enemies.length; i++) {
+		updateEnemy(enemies[i]);
+		drawEnemy(enemies[i]);
+		if (isColliding(player, enemies[i])) {
+			console.log("colliding");
+		}
 	}
 }
 
@@ -81,4 +91,37 @@ function isColliding(circle1, circle2) {
 	} else {
 		return false;
 	}
+}
+
+function keyPressed() {
+	if (keyCode == ENTER) {
+		splitEnemy(0);
+	}
+}
+
+function splitEnemy(i) {
+	console.log(`destroying enemy ${i}`);
+	let enemy = enemies[i];
+	if (enemy.size > 20) {
+		//make two new smaller enemies
+		let newEnemy1 = {
+			x: enemy.x,
+			y: enemy.y,
+			xSpeed: enemy.xSpeed,
+			ySpeed: 0,
+			size: enemy.size / 2,
+		};
+		let newEnemy2 = {
+			x: enemy.x,
+			y: enemy.y,
+			xSpeed: -enemy.xSpeed,
+			ySpeed: 0,
+			size: enemy.size / 2,
+		};
+		//add them to the array
+		enemies.push(newEnemy1);
+		enemies.push(newEnemy2);
+	}
+	//remove the original enemy
+	enemies.splice(i, 1);
 }
