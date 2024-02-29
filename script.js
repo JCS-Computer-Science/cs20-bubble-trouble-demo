@@ -19,14 +19,23 @@ let player = {
 	x: 300,
 	y: 350,
 	size: 30,
+	isMovingRight: true,
+	sprites: {},
 };
+
+function preload() {
+	player.sprites.right = loadImage("./playerSprite.png");
+	player.sprites.left = loadImage("./playerSpriteLeft.png");
+}
 
 function setup() {
 	createCanvas(600, 400);
+	imageMode(CENTER);
 }
 
 function draw() {
 	background(100);
+
 	//update player
 	updatePlayer();
 	drawPlayer();
@@ -41,16 +50,24 @@ function draw() {
 }
 
 function drawPlayer() {
-	fill("blue");
-	circle(player.x, player.y, player.size);
+	// fill("blue");
+	// circle(player.x, player.y, player.size);
+	noSmooth();
+	if (player.isMovingRight) {
+		image(player.sprites.right, player.x, player.y, player.size * 2, player.size * 2);
+	} else {
+		image(player.sprites.left, player.x, player.y, player.size * 2, player.size * 2);
+	}
 }
 
 function updatePlayer() {
 	if (keyIsDown(LEFT_ARROW)) {
 		player.x -= 3;
+		player.isMovingRight = false;
 	}
 	if (keyIsDown(RIGHT_ARROW)) {
 		player.x += 3;
+		player.isMovingRight = true;
 	}
 	if (player.x > width - player.size / 2) {
 		player.x = width - player.size / 2;
